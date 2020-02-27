@@ -1,0 +1,10 @@
+.ghc.environment.*
+cabal.project.local
+
+dist-newstyle/
+dist/
+
+.hspec-failures
+
+*.hi
+*.o
