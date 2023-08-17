@@ -22,10 +22,11 @@
         system = "x86_64-linux";
         overlays = [ overlay ];
       };
-    in {
+    in rec {
       overlays.default = overlay;
 
-      defaultPackage = pkgs.bleep;
+      packages."x86_64-linux".bleep = pkgs.bleep;
+      packages."x86_64-linux".default = packages."x86_64-linux".bleep;
 
       devShells."x86_64-linux".default =
         pkgs.haskellPackages.shellFor {
