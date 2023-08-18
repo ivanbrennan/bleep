@@ -1,7 +1,14 @@
 {
   outputs = { self, nixpkgs }:
     let
-      overlay = final: prev: {
+      system = "x86_64-linux";
+
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ self.overlays.default ];
+      };
+    in {
+      overlays.default = final: prev: {
         haskellPackages = prev.haskellPackages.override {
           overrides = hself: hsuper: {
             bleep = hsuper.callCabal2nix
@@ -18,17 +25,12 @@
           (final.haskell.lib.justStaticExecutables final.haskellPackages.bleep);
       };
 
-      pkgs = import nixpkgs {
-        system = "x86_64-linux";
-        overlays = [ overlay ];
+      packages.${system} = rec {
+        bleep = pkgs.bleep;
+        default = bleep;
       };
-    in rec {
-      overlays.default = overlay;
 
-      packages."x86_64-linux".bleep = pkgs.bleep;
-      packages."x86_64-linux".default = packages."x86_64-linux".bleep;
-
-      devShells."x86_64-linux".default =
+      devShells.${system}.default =
         pkgs.haskellPackages.shellFor {
           packages = p: [ p.bleep ];
           buildInputs = [
