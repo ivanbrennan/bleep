@@ -3,15 +3,15 @@ PROJECT_ROOT ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 .PHONY: build
 build:
-	nix-shell --pure --run "cabal v2-build --ghc-option=-Werror"
+	nix develop --command bash -c "cabal v2-build --ghc-option=-Werror"
 
 .PHONY: run
 run:
-	nix-shell --pure --run "cabal v2-run"
+	nix develop --command bash -c "cabal v2-run"
 
 .PHONY: shell
 shell:
-	nix-shell --pure
+	nix develop
 
 .PHONY: clean
 clean:
